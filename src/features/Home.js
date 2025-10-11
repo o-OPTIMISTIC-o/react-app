@@ -1,13 +1,21 @@
 import React, {useState} from "react";
+import axios from 'axios';
 
-import data from "../app/data";
 import Product from "./Product";
 import AddForm from "./Product/AddForm";
 
 let currentProductId = 9;
 
 export default function Home() {
-  const [products, setProducts] = useState(data);
+  const [products, setProducts] = useState([]);
+
+  async function getProducts() {
+    const products = await axios.get(
+      'https://68e9fcc7f1eeb3f856e5a96c.mockapi.io/products'
+    );
+    setProducts(products.data);
+  }
+  getProducts();
 
   function addProduct(product) {
     const newProduct = {id: ++currentProductId, ...product};
@@ -15,14 +23,18 @@ export default function Home() {
   }
     
   return (
-    <div>
+      <>
         <h1>New Products</h1>
-        <ul className="Home__products">
+        {products.length > 0 ? (
+          <ul className="Home__products">
             {products.map((product) => (
               <Product key={product.id} item={product} />
             ))}
-        </ul>
+          </ul>
+        ) : (
+          <div>Loading products....</div>
+        )}
         <AddForm addProduct={addProduct} />
-    </div>
+      </>
     );
 }
