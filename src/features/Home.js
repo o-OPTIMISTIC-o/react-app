@@ -1,52 +1,25 @@
-import React, { useState, useEffect } from "react";
-import axios from 'axios';
+import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import Product from "./Product";
-import AddForm from "./Product/AddForm";
+import Product from './Product';
 
-let currentProductId = 9;
-
-function Home({ className }) {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    async function getProducts() {
-      const products = await axios.get(
-        'https://68e9fcc7f1eeb3f856e5a96c.mockapi.io/products'
-      );
-      setProducts(products.data);
-    }
-
-    getProducts();
-    
-  }, []);
-
-  function addProduct(product) {
-    const newProduct = {id: ++currentProductId, ...product};
-    setProducts([...products, newProduct]);
-  }
-    
+function Home({ className, products }) {
   return (
     <div className={className}>
       <h1>New Products</h1>
-      {products.length > 0 ? (
-        <ul className="Home__products">
-          {products.map((product) => (
-            <Product key={product.id} item={product} />
-          ))}
-        </ul>
-      ) : (
-        <div>Loading products....</div>
-      )}
-      <AddForm addProduct={addProduct} />
+      <ul className="Home__products">
+        {products.map((product) => (
+          <Product key={product.id} item={product} />
+        ))}
+      </ul>
     </div>
   );
 }
 
 Home.propTypes = {
   className: PropTypes.string.isRequired,
+  products: PropTypes.array.isRequired
 };
 
 export default styled(Home)`
