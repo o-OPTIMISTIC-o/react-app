@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
-function AddForm({ addProduct }) {
+import { addProduct } from './actions';
+
+function AddForm() {
   const [name, setName] = useState('');
   const [imageURL, setImageURL] = useState('');
   const [type, setType] = useState('');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   function onSubmit(event) {
     event.preventDefault();
-    addProduct({ name, type, imageURL });
+    dispatch(addProduct({ name, type, imageURL }));
+    navigate('/');
   }
 
   return (
@@ -53,9 +59,5 @@ function AddForm({ addProduct }) {
     </>
   );
 }
-
-AddForm.propTypes = {
-  addProduct: PropTypes.func.isRequired
-};
 
 export default AddForm;
